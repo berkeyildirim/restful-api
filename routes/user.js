@@ -14,6 +14,33 @@ router.get('/', (req, res) =>{
     res.json(err);
   })
 });
+
+/* User yaşa göre sıralama */
+router.get('/top3', (req, res) =>{
+  const promise = Users.find({ }).limit(3).sort({birthday : 1});
+
+   promise.then((data)=>{
+     res.json(data);
+   }).catch((err)=>{
+     res.json(err);
+   })
+ });
+
+
+/* User doğum yılına göre filtreleme */
+router.get('/birthday/:start_year/:end_year', (req, res) =>{
+  const {start_year , end_year } = req.params;
+  const promise = Users.find({
+    birthday: { "$gte" : parseInt(start_year) , "$lte" : parseInt(end_year)}
+   });
+
+   promise.then((data)=>{
+     res.json(data);
+   }).catch((err)=>{
+     res.json(err);
+   })
+ });
+
 /* Users detay işlemi */
 router.get('/:user_id', (req, res,next) =>{
     if (!mongoose.Types.ObjectId.isValid(req.params.user_id)){
